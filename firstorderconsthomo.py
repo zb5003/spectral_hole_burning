@@ -10,14 +10,33 @@ class System:
         :param operator:
         :param initial:
         """
-        self.dimensions = sp.shape(initial)[0]
         self.operator = operator
-        self.eigenvalues, self.eigenvectors = la.eig(self.operator)
+        self.initial = initial
+        self.dimensions = sp.shape(initial)[0]
+
+    @property
+    def operator(self):
+        return self.__operator
+
+    @operator.setter
+    def operator(self, val):
+        self.__operator = val
+        self.eigenvalues, self.eigenvectors = la.eig(val)
         self.norm_factors = self._generate_norm_factors(self.eigenvectors)
         self.normalized = self._normalize(self.eigenvectors)
-
-        self.initial = initial
         self.coefficients = self._decomp(self.initial, self.eigenvectors)
+        return None
+
+    @property
+    def initial(self):
+        return self.__initial
+
+    @initial.setter
+    def initial(self, val):
+        self.__initial = val
+        self.coefficients = self._decomp(self.initial, self.eigenvectors)
+
+
 
     def _generate_norm_factors(self, vectors):
         """
